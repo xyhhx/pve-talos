@@ -1,0 +1,24 @@
+---
+image: alpine/edge
+packages:
+  - git
+sources:
+  - https://git.sr.ht:~xyhhx/home-ops
+secrets:
+  - 0cae6893-81a1-4712-b0be-a7a37317c074
+environment:
+  repo_name: home-ops
+
+  codeberg_username: xyhhx
+  codeberg_repo: xyhhx/home-ops
+tasks:
+  - codeberg: |
+      cd "${repo_name}"
+      set +x
+      codeberg_token=$(cat ~/secrets/codeberg_pat)
+      codeberg_url=$(printf \
+        "https://%s:%s@codeberg.org/%s"\
+        "${codeberg_username}" \
+        "${codeberg_token}" \
+        "${codeberg_repo}")
+      git push --all "${codeberg_url}" -f
