@@ -3,15 +3,29 @@ image: alpine/edge
 packages:
   - git
 sources:
-  - https://git.sr.ht:~xyhhx/home-ops
+  - https://git.sr.ht:~xyhhx/pve-talos
 secrets:
   - 0cae6893-81a1-4712-b0be-a7a37317c074
+  - 5db23647-ddbd-4713-b95c-be784c1b192f
 environment:
-  repo_name: home-ops
+  repo_name: pve-talos
+
+  github_username: xyhhx
+  github_repo: xyhhx/pve-talos
 
   codeberg_username: xyhhx
-  codeberg_repo: xyhhx/home-ops
+  codeberg_repo: xyhhx/pve-talos
 tasks:
+  - github: |
+      set +x
+      cd "${repo_name}"
+      github_token=$(cat ~/secrets/github_pat)
+      github_url=$(printf \
+        "https://%s:%s@github.com/%s" \
+        "${github_username}" \
+        "${github_token}" \
+        "${github_repo}")
+      git push --all "${github_url}" -f
   - codeberg: |
       cd "${repo_name}"
       set +x
